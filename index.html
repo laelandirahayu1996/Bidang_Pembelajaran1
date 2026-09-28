@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekap CP TP ATP | SMPIT AS-SYIFA BOARDING SCHOOL JALANCAGAK 2</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+<style>
+:root{
+ --primary:#17365d;--primary2:#245a94;--accent:#2f75b5;
+ --green:#16a34a;--red:#dc2626;--yellow:#f59e0b;
+ --bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b;
+ --border:#e2e8f0;--shadow:0 10px 30px rgba(15,23,42,.08)
+}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.header{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;padding:25px 32px;box-shadow:0 8px 25px rgba(23,54,93,.2)}
+.header-inner{max-width:1500px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:16px}.logo{width:60px;height:60px;border-radius:17px;background:#ffffff1c;border:1px solid #ffffff40;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900}
+.school-name{font-size:21px;font-weight:800}.school-sub{font-size:13px;opacity:.82;margin-top:4px}
+.header-badge{padding:9px 14px;border:1px solid #ffffff35;background:#ffffff18;border-radius:12px;font-size:12px;font-weight:700}
+.container{max-width:1500px;margin:auto;padding:28px 30px 55px}.page-title h1{margin:0;font-size:27px}.page-title p{color:var(--muted);margin:7px 0 20px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:20px}.kpi{background:#fff;border:1px solid var(--border);border-radius:18px;padding:19px;box-shadow:var(--shadow)}
+.kpi-title{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase}.kpi-value{font-size:29px;font-weight:900;margin-top:7px}.kpi-desc{font-size:12px;color:var(--muted);margin-top:4px}
+.version-grid,.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}.card{background:#fff;border:1px solid var(--border);border-radius:19px;padding:20px;box-shadow:var(--shadow)}
+.version-header,.section-header{display:flex;justify-content:space-between;align-items:center;gap:12px}.version-title,.section-title{font-size:16px;font-weight:850}.badge{padding:6px 10px;border-radius:999px;background:var(--primary);color:#fff;font-size:10px;font-weight:800}
+.progress-bg{height:15px;background:#e8eef5;border-radius:999px;overflow:hidden;margin-top:15px}.progress{height:100%;width:0;background:linear-gradient(90deg,#2f75b5,#22c55e);transition:.5s;border-radius:999px}.progress-info{display:flex;justify-content:space-between;margin-top:8px;color:var(--muted);font-size:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);padding:15px;border-radius:17px;box-shadow:var(--shadow);margin-bottom:18px}
+.search{flex:1;min-width:220px}input,select,textarea{font:inherit}.search input,.toolbar select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:#f8fafc;outline:none}.search input:focus,.toolbar select:focus{border-color:var(--accent);background:#fff}
+.btn{border:0;padding:10px 14px;border-radius:9px;font-weight:750;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}.btn-blue{background:#e8f1fb;color:#15528b}.btn-green{background:#dcfce7;color:#166534}.btn-red{background:#fee2e2;color:#991b1b}.btn-dark{background:#172033;color:#fff}
+.table-card{background:#fff;border:1px solid var(--border);border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.table-header{padding:18px 20px;border-bottom:1px solid var(--border)}.table-header h2{margin:0;font-size:17px}.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:1180px}thead{background:#f1f5f9}th{padding:12px;font-size:11px;color:#475569;text-transform:uppercase;text-align:left;border-bottom:1px solid var(--border)}td{padding:11px 12px;border-bottom:1px solid #edf1f5;font-size:13px;vertical-align:middle}tbody tr:hover{background:#f8fbff}
+.center{text-align:center}.subject{font-weight:750}.class-badge{display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;border-radius:9px;background:#eaf2fb;color:var(--primary);font-weight:850}
+.status{display:inline-flex;gap:6px;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:850}.complete{background:#dcfce7;color:#166534}.incomplete{background:#fee2e2;color:#991b1b}.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.drive-input{width:210px;padding:7px;border:1px solid var(--border);border-radius:7px;font-size:11px}.link{display:inline-block;margin-top:5px;padding:6px 8px;background:#eaf2fb;color:#15528b;border-radius:7px;text-decoration:none;font-size:10px;font-weight:750}
+.note{width:230px;border:1px solid var(--border);border-radius:7px;padding:7px;resize:none;font-size:11px}.note:focus,.drive-input:focus{outline:none;border-color:var(--accent)}
+.share-card{background:linear-gradient(135deg,#17365d,#245a94);color:#fff;border-radius:20px;padding:22px;box-shadow:var(--shadow);margin:20px 0}.share-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.share-url{width:100%;padding:10px;border-radius:9px;border:0;background:#ffffff18;color:#fff;outline:none}
+.teacher-panel{display:none}.teacher-panel.show{display:block}.admin-panel.hide{display:none}
+.info-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:20px}.info-card{background:#fff;border:1px solid var(--border);border-radius:19px;padding:20px;box-shadow:var(--shadow)}
+.info-card h3{margin:0 0 14px}.instruction{padding:12px;background:#f8fafc;border-left:4px solid var(--accent);margin:8px 0;border-radius:7px;font-size:13px}
+.teacher-table{width:100%;min-width:700px}.teacher-table td,.teacher-table th{padding:10px}
+.teacher-note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px;border-radius:10px;font-size:12px}
+.footer{text-align:center;color:var(--muted);padding:25px;font-size:11px}
+.modal{display:none;position:fixed;inset:0;background:#0f172a99;backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center}.modal.show{display:flex}.modal-box{width:min(700px,92%);background:#fff;border-radius:18px;padding:23px;max-height:85vh;overflow:auto}.close{float:right;border:0;border-radius:50%;width:32px;height:32px;cursor:pointer}
+@media(max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.version-grid,.chart-grid,.info-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.header{padding:18px}.header-badge{display:none}.school-name{font-size:15px}.logo{width:48px;height:48px}.container{padding:20px 14px}.kpi-grid{grid-template-columns:1fr}.share-url{font-size:11px}}
+
+/* Catatan Koordinator pada Laporan Guru */
+.teacher-notes-panel{
+  margin-top:24px;
+  background:rgba(255,255,255,.96);
+  border:1px solid #e5e7eb;
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 10px 30px rgba(15,23,42,.06);
+}
+.teacher-notes-panel h3{
+  margin:0 0 6px;
+  font-size:18px;
+  color:#0f172a;
+}
+.teacher-notes-panel .notes-subtitle{
+  margin:0 0 16px;
+  color:#64748b;
+  font-size:13px;
+}
+.teacher-notes-list{
+  display:grid;
+  gap:12px;
+}
+.teacher-note-item{
+  border:1px solid #e2e8f0;
+  border-left:5px solid #f59e0b;
+  border-radius:14px;
+  padding:15px 16px;
+  background:#fffbeb;
+}
+.teacher-note-item.is-complete{
+  border-left-color:#10b981;
+  background:#ecfdf5;
+}
+.teacher-note-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+.teacher-note-title{
+  font-weight:800;
+  color:#0f172a;
+}
+.teacher-note-meta{
+  font-size:12px;
+  color:#64748b;
+}
+.teacher-note-body{
+  color:#334155;
+  line-height:1.55;
+  white-space:pre-wrap;
+}
+.teacher-note-empty{
+  padding:18px;
+  text-align:center;
+  border:1px dashed #cbd5e1;
+  border-radius:14px;
+  color:#64748b;
+  background:#f8fafc;
+}
+
+
+.teacher-note-item.is-complete .teacher-note-body{
+  color:#166534;
+}
+.teacher-note-item:not(.is-complete) .teacher-note-body{
+  color:#92400e;
+}
+.teacher-note-item .teacher-note-body strong{
+  font-weight:800;
+}
+
+
+/* ===== Laporan Guru & Link Singkat ===== */
+.report-version-selector,.report-switcher{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.report-version-btn,.report-switch{border:1px solid #ffffff38;background:#ffffff12;color:#fff;border-radius:12px;padding:12px;text-align:left;cursor:pointer}
+.report-version-btn.active{background:#fff;color:#17365d;border-color:#fff}
+.report-version-btn strong,.report-switch strong{display:block;font-size:12px}
+.report-version-btn span,.report-switch span{display:block;font-size:10px;opacity:.75;margin-top:3px}
+.share-hint{font-size:10px;opacity:.72;margin-top:7px}
+.teacher-report-topline{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.version-report-badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:#eaf2fb;color:#15528b;font-size:10px;font-weight:850}
+.report-switcher{margin-top:0}
+.report-switch{background:#fff;color:#334155;border-color:#e2e8f0;text-align:center;box-shadow:0 5px 16px rgba(15,23,42,.05)}
+.report-switch.active{background:#17365d;color:#fff;border-color:#17365d}
+.report-help{font-size:12px;color:#64748b;line-height:1.5;margin:5px 0 14px}
+.teacher-note.warning{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+.teacher-report-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 16px}
+.teacher-report-summary>div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:13px;padding:12px;text-align:center}
+.teacher-report-summary strong{display:block;font-size:20px;color:#0f172a}
+.teacher-report-summary span{display:block;margin-top:3px;color:#64748b;font-size:10px;text-transform:uppercase}
+.teacher-note-report-list{display:grid;gap:10px;max-height:620px;overflow:auto;padding-right:3px}
+.teacher-note-report{border:1px solid #e2e8f0;border-left:5px solid #94a3b8;border-radius:13px;overflow:hidden;background:#fff}
+.teacher-note-report.complete{border-left-color:#16a34a;background:#f0fdf4}
+.teacher-note-report.incomplete{border-left-color:#f59e0b;background:#fffbeb}
+.teacher-note-report-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px}
+.teacher-note-report-head strong{display:block;color:#0f172a;font-size:13px}
+.teacher-note-report-head span:not(.status){display:block;margin-top:3px;color:#64748b;font-size:11px}
+.teacher-note-report-body{padding:11px 14px 13px;border-top:1px dashed #cbd5e1;color:#334155;font-size:12px;line-height:1.55}
+.teacher-note-label{color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:10px;margin-bottom:4px}
+.teacher-drive-link{display:inline-block;margin-top:8px;padding:6px 9px;border-radius:8px;background:#eff6ff;color:#1d4ed8;text-decoration:none;font-weight:700;font-size:10px}
+.teacher-table-notes{min-width:320px;line-height:1.45}
+.table-note-line{font-size:11px;margin:3px 0;padding:4px 6px;border-radius:6px;background:#f8fafc}
+@media(max-width:700px){.report-version-selector,.report-switcher{grid-template-columns:1fr}.teacher-report-topline{align-items:flex-start;flex-direction:column}.teacher-report-summary{grid-template-columns:1fr}.teacher-note-report-list{max-height:none}}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="header-inner">
+ <div class="brand">
+  <div class="logo">AS</div>
+  <div>
+   <div class="school-name">SMPIT AS-SYIFA BOARDING SCHOOL JALANCAGAK 2</div>
+   <div class="school-sub">Sistem Monitoring & Verifikasi CP • TP • ATP</div>
+  </div>
+ </div>
+ <div class="header-badge">KOORDINATOR PEMBELAJARAN</div>
+</div>
+</header>
+
+<main class="container">
+
+<div id="adminPanel" class="admin-panel">
+ <div class="page-title">
+  <h1>Dashboard Verifikasi CP • TP • ATP</h1>
+  <p>Monitoring dokumen pembelajaran kelas 7, 8, dan 9 berdasarkan hasil pemeriksaan koordinator.</p>
+ </div>
+
+ <section class="kpi-grid">
+  <div class="kpi"><div class="kpi-title">Total Mata Pelajaran</div><div class="kpi-value" id="kpiMapel">10</div><div class="kpi-desc">Termasuk Non Reguler</div></div>
+  <div class="kpi"><div class="kpi-title">Paket Lengkap</div><div class="kpi-value" id="kpiLengkap">0</div><div class="kpi-desc">CP • TP • ATP</div></div>
+  <div class="kpi"><div class="kpi-title">Progress Sistem</div><div class="kpi-value" id="kpiProgress">0%</div><div class="kpi-desc">Seluruh 30 paket</div></div>
+  <div class="kpi"><div class="kpi-title">Belum Lengkap</div><div class="kpi-value" id="kpiBelum">30</div><div class="kpi-desc">Perlu ditindaklanjuti</div></div>
+ </section>
+
+ <section class="version-grid">
+  <div class="card">
+   <div class="version-header"><div class="version-title">Tanpa Mata Pelajaran Non Reguler</div><span class="badge">27 PAKET</span></div>
+   <div class="progress-bg"><div class="progress" id="barWithout"></div></div>
+   <div class="progress-info"><span id="textWithout">0 / 27 lengkap</span><strong id="pctWithout">0%</strong></div>
+  </div>
+  <div class="card">
+   <div class="version-header"><div class="version-title">Dengan Mata Pelajaran Non Reguler</div><span class="badge">30 PAKET</span></div>
+   <div class="progress-bg"><div class="progress" id="barWith"></div></div>
+   <div class="progress-info"><span id="textWith">0 / 30 lengkap</span><strong id="pctWith">0%</strong></div>
+  </div>
+ </section>
+
+ <section class="share-card">
+  <div class="section-header">
+   <div>
+    <div class="section-title">🔗 Laporan untuk Guru</div>
+    <div style="font-size:12px;opacity:.82;margin-top:5px">Pilih versi laporan, lalu buat tautan read-only untuk dibagikan kepada guru.</div>
+   </div>
+   <span class="badge">SHARE</span>
+  </div>
+  <div class="report-version-selector">
+   <button id="shareWithBtn" class="report-version-btn active" onclick="selectShareVersion('with')"><strong>Dengan Non Reguler</strong><span>30 paket</span></button>
+   <button id="shareWithoutBtn" class="report-version-btn" onclick="selectShareVersion('without')"><strong>Tanpa Non Reguler</strong><span>27 paket</span></button>
+  </div>
+  <div class="share-actions">
+   <button class="btn btn-green" onclick="generateTeacherLink()">🔗 Buat Link Singkat</button>
+   <button class="btn btn-blue" onclick="copyTeacherLink()">📋 Salin Link</button>
+   <button class="btn btn-dark" onclick="openTeacherPreview()">👁 Lihat Laporan</button>
+  </div>
+  <input id="shareUrl" class="share-url" readonly placeholder="Link laporan akan muncul di sini...">
+  <div id="shareHint" class="share-hint">Data, status, catatan koordinator, dan tautan Drive ikut dibawa ke laporan.</div>
+ </section>
+
+ <section class="toolbar">
+  <div class="search"><input id="search" placeholder="🔎 Cari mata pelajaran..." oninput="renderTable()"></div>
+  <select id="filterClass" onchange="renderTable()"><option value="all">Semua Kelas</option><option>7</option><option>8</option><option>9</option></select>
+  <select id="filterStatus" onchange="renderTable()"><option value="all">Semua Status</option><option>LENGKAP</option><option>BELUM LENGKAP</option></select>
+  <button class="btn btn-green" onclick="exportCSV()">⬇ Export CSV</button>
+  <button class="btn btn-blue" onclick="openGuide()">ℹ Panduan</button>
+  <button class="btn btn-red" onclick="resetData()">↺ Reset</button>
+ </section>
+
+ <section class="table-card">
+  <div class="table-header"><h2>Rekap Verifikasi Dokumen</h2><span id="recordInfo">30 data</span></div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>No</th><th>Mata Pelajaran</th><th>Kelas</th><th>Dokumen</th><th>Status</th><th>Tautan Drive</th><th>Catatan Koordinator</th></tr></thead>
+    <tbody id="tbody"></tbody>
+   </table>
+  </div>
+ </section>
+
+ <section class="chart-grid">
+  <div class="card"><h3>📊 Persentase Lengkap vs Belum Lengkap</h3><canvas id="statusChart"></canvas></div>
+  <div class="card"><h3>📈 Persentase per Mata Pelajaran</h3><canvas id="subjectChart"></canvas></div>
+ </section>
+</div>
+
+<!-- MODE INFORMASI GURU -->
+<div id="teacherPanel" class="teacher-panel">
+ <div class="page-title">
+  <div class="teacher-report-topline">
+   <div>
+    <h1>Laporan untuk Guru</h1>
+    <p>Hasil pemeriksaan CP • TP • ATP — SMPIT AS-SYIFA BOARDING SCHOOL JALANCAGAK 2</p>
+   </div>
+   <span id="teacherVersionBadge" class="version-report-badge">DENGAN NON REGULER</span>
+  </div>
+ </div>
+
+ <section class="report-switcher">
+  <button id="teacherWithBtn" class="report-switch active" onclick="switchTeacherVersion('with')"><strong>Dengan Non Reguler</strong><span>30 paket • Kelas 7–9</span></button>
+  <button id="teacherWithoutBtn" class="report-switch" onclick="switchTeacherVersion('without')"><strong>Tanpa Non Reguler</strong><span>27 paket • Kelas 7–9</span></button>
+ </section>
+
+ <section class="kpi-grid">
+  <div class="kpi"><div class="kpi-title">Total Paket</div><div class="kpi-value" id="teacherTotal">30</div><div class="kpi-desc">CP • TP • ATP kelas 7–9</div></div>
+  <div class="kpi"><div class="kpi-title">Sudah Lengkap</div><div class="kpi-value" id="teacherComplete">0</div><div class="kpi-desc">Hasil verifikasi koordinator</div></div>
+  <div class="kpi"><div class="kpi-title">Belum Lengkap</div><div class="kpi-value" id="teacherIncomplete">30</div><div class="kpi-desc">Perlu ditindaklanjuti</div></div>
+  <div class="kpi"><div class="kpi-title">Progress</div><div class="kpi-value" id="teacherProgress">0%</div><div class="kpi-desc">Kelengkapan paket</div></div>
+ </section>
+
+ <section class="chart-grid">
+  <div class="card"><h3>📊 Status Pengumpulan</h3><canvas id="teacherStatusChart"></canvas></div>
+  <div class="card"><h3>📈 Persentase per Mata Pelajaran</h3><canvas id="teacherSubjectChart"></canvas></div>
+ </section>
+
+ <section class="info-grid">
+  <div class="info-card">
+   <h3>📝 Catatan Koordinator</h3>
+   <p class="report-help">Catatan ditampilkan untuk <strong>setiap mata pelajaran dan kelas</strong>, baik LENGKAP maupun BELUM LENGKAP.</p>
+   <div id="teacherNotes"></div>
+  </div>
+  <div class="info-card">
+   <h3>📋 Panduan Tindak Lanjut</h3>
+   <div class="teacher-note">Status <strong>LENGKAP</strong> berarti CP, TP, dan ATP telah diperiksa. Tetap baca catatan karena koordinator dapat memberikan catatan penyempurnaan.</div>
+   <div class="teacher-note warning">Status <strong>BELUM LENGKAP</strong> berarti masih terdapat bagian yang perlu dilengkapi/diperbaiki sesuai catatan koordinator.</div>
+   <div class="instruction"><strong>1.</strong> Pastikan CP tersedia dan sesuai.</div>
+   <div class="instruction"><strong>2.</strong> Pastikan TP tersedia dan selaras dengan CP.</div>
+   <div class="instruction"><strong>3.</strong> Pastikan ATP tersedia dan alurnya jelas.</div>
+   <div class="instruction"><strong>4.</strong> Perbaiki sesuai catatan koordinator, lalu perbarui file di Drive.</div>
+  </div>
+ </section>
+
+ <section class="card" style="margin-top:20px">
+  <div class="section-header"><div><h3 style="margin:0">🔎 Rekap Kelas & Mata Pelajaran</h3><div class="report-help">Status dan catatan ditampilkan per kelas.</div></div></div>
+  <div class="table-wrap">
+   <table class="teacher-table">
+    <thead><tr><th>Mata Pelajaran</th><th>Kelas 7</th><th>Kelas 8</th><th>Kelas 9</th><th>Catatan Koordinator per Kelas</th></tr></thead>
+    <tbody id="teacherTbody"></tbody>
+   </table>
+  </div>
+ </section>
+</div>>
+
+</main>
+
+<footer class="footer">SMPIT AS-SYIFA BOARDING SCHOOL JALANCAGAK 2 • Sistem Rekapitulasi CP • TP • ATP</footer>
+
+<div class="modal" id="guideModal">
+ <div class="modal-box">
+  <button class="close" onclick="closeGuide()">✕</button>
+  <h2>Panduan Koordinator</h2>
+  <ol>
+   <li>Guru mengunggah satu file CP–TP–ATP ke Drive yang disediakan.</li>
+   <li>Koordinator membuka tautan Drive dan memeriksa kelengkapan.</li>
+   <li>Pilih <strong>LENGKAP</strong> jika CP, TP, dan ATP sudah tersedia dan sesuai.</li>
+   <li>Pilih <strong>BELUM LENGKAP</strong> jika masih ada bagian yang perlu diperbaiki.</li>
+   <li>Tempel tautan file/folder Drive pada kolom Tautan Drive.</li>
+   <li>Isi Catatan Koordinator agar guru mengetahui bagian yang harus diperbaiki.</li>
+   <li>Gunakan tombol <strong>Buat Link Informasi Guru</strong> untuk membagikan ringkasan read-only.</li>
+  </ol>
+ </div>
+</div>
+
+<script>
+const subjects=["Bahasa Indonesia","Bahasa Inggris","Bahasa Arab","Matematika","IPA","IPS","PAI","PJOK","Informatika","Non Reguler"];
+const classes=[7,8,9];
+const KEY="assyifa_cp_tp_atp_v3";
+
+function defaultData(){
+ let id=1,arr=[];
+ subjects.forEach(subject=>classes.forEach(kelas=>arr.push({
+  id:id++,subject,kelas,status:"BELUM LENGKAP",drive:"",note:""
+ })));
+ return arr;
+}
+let data=JSON.parse(localStorage.getItem(KEY)||"null")||defaultData();
+
+function save(){localStorage.setItem(KEY,JSON.stringify(data));}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+
+function renderTable(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const cf=document.getElementById("filterClass").value;
+ const sf=document.getElementById("filterStatus").value;
+ const rows=data.filter(x=>
+  x.subject.toLowerCase().includes(q)&&
+  (cf==="all"||String(x.kelas)===cf)&&
+  (sf==="all"||x.status===sf)
+ );
+ document.getElementById("recordInfo").textContent=rows.length+" data";
+ document.getElementById("tbody").innerHTML=rows.map((x,i)=>`
+ <tr>
+  <td class="center">${i+1}</td>
+  <td class="subject">${esc(x.subject)}</td>
+  <td class="center"><span class="class-badge">${x.kelas}</span></td>
+  <td>CP • TP • ATP</td>
+  <td class="center">
+   <select onchange="setStatus(${x.id},this.value)" style="border:0;background:transparent;font-weight:700">
+    <option ${x.status==="LENGKAP"?"selected":""}>LENGKAP</option>
+    <option ${x.status==="BELUM LENGKAP"?"selected":""}>BELUM LENGKAP</option>
+   </select><br>
+   <span class="status ${x.status==="LENGKAP"?"complete":"incomplete"}"><span class="dot"></span>${x.status}</span>
+  </td>
+  <td>
+   <input class="drive-input" value="${esc(x.drive)}" placeholder="Tempel link Drive" onchange="setDrive(${x.id},this.value)">
+   ${x.drive?`<br><a class="link" href="${esc(x.drive)}" target="_blank">🔗 Buka Drive</a>`:""}
+  </td>
+  <td><textarea class="note" rows="2" placeholder="Apa yang harus diperbaiki?" onchange="setNote(${x.id},this.value)">${esc(x.note)}</textarea></td>
+ </tr>`).join("");
+ updateDashboard();
+}
+
+function setStatus(id,v){const x=data.find(a=>a.id===id);if(x){x.status=v;save();renderTable();}}
+function setDrive(id,v){const x=data.find(a=>a.id===id);if(x){x.drive=v.trim();save();renderTable();}}
+function setNote(id,v){const x=data.find(a=>a.id===id);if(x){x.note=v;save();updateDashboard();}}
+
+function updateDashboard(){
+ const total=data.length, complete=data.filter(x=>x.status==="LENGKAP").length;
+ const without=data.filter(x=>x.subject!=="Non Reguler"), wc=without.filter(x=>x.status==="LENGKAP").length;
+ const pct=Math.round(complete/total*100), wp=Math.round(wc/without.length*100);
+ document.getElementById("kpiMapel").textContent=subjects.length;
+ document.getElementById("kpiLengkap").textContent=complete;
+ document.getElementById("kpiProgress").textContent=pct+"%";
+ document.getElementById("kpiBelum").textContent=total-complete;
+ document.getElementById("barWithout").style.width=wp+"%";document.getElementById("textWithout").textContent=`${wc} / ${without.length} lengkap`;document.getElementById("pctWithout").textContent=wp+"%";
+ document.getElementById("barWith").style.width=pct+"%";document.getElementById("textWith").textContent=`${complete} / ${total} lengkap`;document.getElementById("pctWith").textContent=pct+"%";
+ drawCharts();
+}
+
+let charts={};
+function drawCharts(){
+ const complete=data.filter(x=>x.status==="LENGKAP").length, incomplete=data.length-complete;
+ const vals=subjects.map(s=>{const a=data.filter(x=>x.subject===s);return Math.round(a.filter(x=>x.status==="LENGKAP").length/3*100);});
+ const make=(id,type,labels,datasets,options={})=>{
+  if(charts[id])charts[id].destroy();
+  charts[id]=new Chart(document.getElementById(id),{type,data:{labels,datasets},options:{responsive:true,plugins:{legend:{position:"bottom"}},...options}});
+ };
+ make("statusChart","doughnut",["LENGKAP","BELUM LENGKAP"],[{data:[complete,incomplete],backgroundColor:["#16a34a","#dc2626"],borderColor:"#fff",borderWidth:3}]);
+ make("subjectChart","bar",subjects,[{label:"Kelengkapan (%)",data:vals,backgroundColor:"#2f75b5",borderRadius:6}],{scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+"%"}}},plugins:{legend:{display:false}}});
+}
+
+let shareVersion="with";
+let teacherVersion="with";
+
+function getReportData(version){
+ const source=Array.isArray(data)?data:[];
+ return version==="without" ? source.filter(x=>x.subject!=="Non Reguler") : source.slice();
+}
+
+function selectShareVersion(version){
+ shareVersion=version;
+ document.getElementById("shareWithBtn").classList.toggle("active",version==="with");
+ document.getElementById("shareWithoutBtn").classList.toggle("active",version==="without");
+ document.getElementById("shareUrl").value="";
+ document.getElementById("shareHint").textContent=version==="with"
+  ?"Versi dengan Non Reguler • 30 paket • catatan koordinator ikut disertakan."
+  :"Versi tanpa Non Reguler • 27 paket • catatan koordinator ikut disertakan.";
+}
+
+function makeCompactPayload(version){
+ const rows=getReportData(version).map(x=>({
+  s:x.subject,k:x.kelas,t:x.status,d:x.drive||"",n:x.note||""
+ }));
+ return {v:2,r:version,d:rows};
+}
+
+function generateTeacherLink(){
+ const payload=makeCompactPayload(shareVersion);
+ const compact=LZString.compressToEncodedURIComponent(JSON.stringify(payload));
+ const base=location.href.split("#")[0];
+ const link=base+"#laporan="+compact;
+ document.getElementById("shareUrl").value=link;
+ navigator.clipboard?.writeText(link);
+ document.getElementById("shareHint").textContent=`Link ${shareVersion==="with"?"dengan":"tanpa"} Non Reguler dibuat • ${payload.d.length} paket • otomatis disalin.`;
+}
+
+function copyTeacherLink(){
+ const v=document.getElementById("shareUrl").value;
+ if(!v){generateTeacherLink();return;}
+ navigator.clipboard?.writeText(v);
+ document.getElementById("shareHint").textContent="Link laporan berhasil disalin.";
+}
+
+function decodeReportHash(){
+ const hash=location.hash||"";
+ if(!hash.startsWith("#laporan="))return null;
+ try{
+  return JSON.parse(LZString.decompressFromEncodedURIComponent(hash.substring(9)));
+ }catch(e){return null;}
+}
+
+function readTeacherMode(){
+ const payload=decodeReportHash();
+ if(!payload || !Array.isArray(payload.d) || !payload.d.length)return false;
+ try{
+  data=payload.d.map(x=>({subject:x.s,kelas:Number(x.k),status:x.t,drive:x.d||"",note:x.n||""}));
+  teacherVersion=payload.r==="without"?"without":"with";
+  document.getElementById("adminPanel").classList.add("hide");
+  document.getElementById("teacherPanel").classList.add("show");
+  switchTeacherVersion(teacherVersion);
+  return true;
+ }catch(e){return false;}
+}
+
+function switchTeacherVersion(version){
+ teacherVersion=version;
+ document.getElementById("teacherWithBtn").classList.toggle("active",version==="with");
+ document.getElementById("teacherWithoutBtn").classList.toggle("active",version==="without");
+ document.getElementById("teacherVersionBadge").textContent=version==="with"?"DENGAN NON REGULER":"TANPA NON REGULER";
+ renderTeacher(getReportData(version));
+}
+
+function renderTeacher(rows=getReportData(teacherVersion)){
+ const total=rows.length,complete=rows.filter(x=>x.status==="LENGKAP").length,incomplete=total-complete;
+ document.getElementById("teacherTotal").textContent=total;
+ document.getElementById("teacherComplete").textContent=complete;
+ document.getElementById("teacherIncomplete").textContent=incomplete;
+ document.getElementById("teacherProgress").textContent=(total?Math.round(complete/total*100):0)+"%";
+
+ if(charts.teacherStatus)charts.teacherStatus.destroy();
+ charts.teacherStatus=new Chart(document.getElementById("teacherStatusChart"),{
+  type:"doughnut",data:{labels:["LENGKAP","BELUM LENGKAP"],datasets:[{data:[complete,incomplete],backgroundColor:["#16a34a","#dc2626"],borderColor:"#fff",borderWidth:3}]},
+  options:{responsive:true,plugins:{legend:{position:"bottom"}}}
+ });
+
+ const activeSubjects=subjects.filter(s=>teacherVersion==="with"||s!=="Non Reguler");
+ const vals=activeSubjects.map(s=>Math.round(rows.filter(x=>x.subject===s&&x.status==="LENGKAP").length/3*100));
+ if(charts.teacherSubject)charts.teacherSubject.destroy();
+ charts.teacherSubject=new Chart(document.getElementById("teacherSubjectChart"),{
+  type:"bar",data:{labels:activeSubjects,datasets:[{label:"Kelengkapan (%)",data:vals,backgroundColor:"#2f75b5",borderRadius:6}]},
+  options:{responsive:true,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+"%"}}},plugins:{legend:{display:false}}}
+ });
+
+ const sorted=rows.slice().sort((a,b)=>activeSubjects.indexOf(a.subject)-activeSubjects.indexOf(b.subject)||Number(a.kelas)-Number(b.kelas));
+ document.getElementById("teacherNotes").innerHTML=`
+  <div class="teacher-report-summary">
+   <div><strong>${total}</strong><span>Total Paket</span></div>
+   <div><strong>${complete}</strong><span>LENGKAP</span></div>
+   <div><strong>${incomplete}</strong><span>BELUM LENGKAP</span></div>
+  </div>
+  <div class="teacher-note-report-list">
+   ${sorted.map(x=>{
+    const ok=x.status==="LENGKAP";
+    const note=(x.note||"").trim()||(ok?"Tidak ada catatan khusus. Dokumen dinyatakan LENGKAP berdasarkan pemeriksaan koordinator.":"Belum ada catatan khusus. Silakan hubungi koordinator untuk mengetahui bagian yang perlu dilengkapi.");
+    return `<div class="teacher-note-report ${ok?"complete":"incomplete"}">
+      <div class="teacher-note-report-head">
+       <div><strong>${esc(x.subject)}</strong><span>Kelas ${esc(x.kelas)} • CP–TP–ATP</span></div>
+       <span class="status ${ok?"complete":"incomplete"}">${esc(x.status)}</span>
+      </div>
+      <div class="teacher-note-report-body">
+       <div class="teacher-note-label">Catatan Koordinator</div>
+       <div>${esc(note)}</div>
+       ${x.drive?`<a href="${esc(x.drive)}" target="_blank" rel="noopener" class="teacher-drive-link">🔗 Buka Dokumen / Folder Drive</a>`:""}
+      </div>
+     </div>`;
+   }).join("")}
+  </div>`;
+
+ document.getElementById("teacherTbody").innerHTML=activeSubjects.map(s=>{
+  const cells=classes.map(k=>{
+   const x=rows.find(a=>a.subject===s&&Number(a.kelas)===Number(k));
+   return x?`<td class="center"><span class="status ${x.status==="LENGKAP"?"complete":"incomplete"}">${esc(x.status)}</span></td>`:`<td class="center">—</td>`;
+  }).join("");
+  const notes=rows.filter(x=>x.subject===s).sort((a,b)=>Number(a.kelas)-Number(b.kelas)).map(x=>{
+   const n=(x.note||"").trim()||(x.status==="LENGKAP"?"Tidak ada catatan khusus.":"Belum ada catatan khusus.");
+   return `<div class="table-note-line"><strong>Kelas ${esc(x.kelas)} (${esc(x.status)}):</strong> ${esc(n)}</div>`;
+  }).join("");
+  return `<tr><td class="subject">${esc(s)}</td>${cells}<td class="teacher-table-notes">${notes}</td></tr>`;
+ }).join("");
+}
+
+function openTeacherPreview(){
+ const payload=makeCompactPayload(shareVersion);
+ const compact=LZString.compressToEncodedURIComponent(JSON.stringify(payload));
+ window.open(location.href.split("#")[0]+"#laporan="+compact,"_blank");
+}
+
+function exportCSV(){
+ let csv="No,Mata Pelajaran,Kelas,Dokumen,Status,Tautan Drive,Catatan Koordinator\n";
+ data.forEach((x,i)=>csv+=[i+1,csvEsc(x.subject),x.kelas,"CP - TP - ATP",csvEsc(x.status),csvEsc(x.drive),csvEsc(x.note)].join(",")+"\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="Rekap_CP_TP_ATP_AsSyifa_Jalancagak2.csv";a.click();URL.revokeObjectURL(url);
+}
+function csvEsc(v){return `"${String(v??"").replace(/"/g,'""')}"`;}
+function resetData(){if(confirm("Semua status dan catatan akan direset menjadi BELUM LENGKAP. Lanjutkan?")){data=defaultData();save();renderTable();}}
+function openGuide(){document.getElementById("guideModal").classList.add("show")}
+function closeGuide(){document.getElementById("guideModal").classList.remove("show")}
+
+if(!readTeacherMode()){renderTable();}
+</script>
+
+</body>
+</html>
